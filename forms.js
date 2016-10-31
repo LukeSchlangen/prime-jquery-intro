@@ -21,26 +21,17 @@ $(document).ready(function() {
       employeeArray.push(values);
       console.log(employeeArray);
 
-      totalSalary = 0;
-
-      for(var i = 0; i < employeeArray.length; i++){
-        totalSalary += Number(employeeArray[i].employeeSalary);
-      }
-
-      var monthlySalary = totalSalary / 12;
-
-      $('#monthlySalary').text(monthlySalary);
-
       // clear out inputs
       $('#employeeinfo').find('input[type=text], input[type=number]').val('');
 
-      // append to DOM
-      appendDom(values);
+      redrawEmployeeTable();
+      recalculateSalary();
     });
 
-    function appendDom(empInfo) {
+    function appendDom(empInfo, index) {
       $('#container').append('<tr class="person"></tr>');
       var $el = $('tbody').children().last();
+      $el.data("id", index);
 
       $el.append('<td>' + empInfo.employeeFirstName + '</td><td>' +
       empInfo.employeeLastName + '</td><td>' +
@@ -52,7 +43,31 @@ $(document).ready(function() {
 
     $('#container').on('click', '.deleteButton', function(){
       console.log($(this));
-      $(this).parent().parent().remove();
+      var indexToRemove = $(this).parent().parent().data('id');
+      console.log($(this).parent().parent().data('id'));
+      employeeArray.splice(indexToRemove, 1);
+      redrawEmployeeTable();
+      recalculateSalary();
     });
+
+    function redrawEmployeeTable(){
+      // append to DOM
+      $('tbody').empty();
+      for(var i = 0; i < employeeArray.length; i++){
+        appendDom(employeeArray[i], i);
+      }
+    }
+
+    function recalculateSalary(){
+      totalSalary = 0;
+
+      for(var i = 0; i < employeeArray.length; i++){
+        totalSalary += Number(employeeArray[i].employeeSalary);
+      }
+
+      var monthlySalary = totalSalary / 12;
+
+      $('#monthlySalary').text(monthlySalary);
+    }
 
 });
