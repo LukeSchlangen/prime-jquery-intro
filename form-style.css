@@ -8,6 +8,10 @@ h1 {
   margin: 30px;
 }
 
+table {
+  width: 100%;
+}
+
 .person {
   border: 2px solid black;
   padding: 2px;

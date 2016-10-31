@@ -1,5 +1,7 @@
 $(document).ready(function() {
     var array = [];
+    var employeeArray = [];
+    var totalSalary = 0;
     $('#employeeinfo').on('submit', function(event) {
       event.preventDefault();
 
@@ -16,21 +18,41 @@ $(document).ready(function() {
         values[element.name] = element.value;
       });
 
-      console.log(values);
+      employeeArray.push(values);
+      console.log(employeeArray);
+
+      totalSalary = 0;
+
+      for(var i = 0; i < employeeArray.length; i++){
+        totalSalary += Number(employeeArray[i].employeeSalary);
+      }
+
+      var monthlySalary = totalSalary / 12;
+
+      $('#monthlySalary').text(monthlySalary);
 
       // clear out inputs
-      $('#employeeinfo').find('input[type=text]').val('');
+      $('#employeeinfo').find('input[type=text], input[type=number]').val('');
 
       // append to DOM
       appendDom(values);
     });
 
     function appendDom(empInfo) {
-      $('#container').append('<div class="person"></div>');
-      var $el = $('#container').children().last();
+      $('#container').append('<tr class="person"></tr>');
+      var $el = $('tbody').children().last();
 
-      $el.append('<p>' + empInfo.employeefirstname + ' ' + empInfo.employeelastname + '</p>');
+      $el.append('<td>' + empInfo.employeeFirstName + '</td><td>' +
+      empInfo.employeeLastName + '</td><td>' +
+      empInfo.employeeIdNumber + '</td><td>' +
+      empInfo.employeeJobTitle + '</td><td>' +
+      empInfo.employeeSalary + '</td><td>' +
+      '<button class="deleteButton">Delete</button></td>');
     }
 
+    $('#container').on('click', '.deleteButton', function(){
+      console.log($(this));
+      $(this).parent().parent().remove();
+    });
 
 });
